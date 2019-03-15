@@ -1,0 +1,55 @@
+tls:
+  # Enable TLS (default: false)
+  enabled: false
+  # TLS for the server's listening port
+  certfile: tls-cert.pem
+  keyfile:
+  clientauth:
+    type: noclientcert
+certfiles:
+
+#############################################################################
+ca:
+  # Name of this CA
+  name: ca.uni.com
+  # Key file (default: ca-key.pem)
+  keyfile: ca-key.pem
+  # Certificate file (default: ca-cert.pem)
+  certfile: ca-cert.pem
+  # Chain file (default: chain-cert.pem)
+  chainfile: ca-chain.pem
+
+#############################################################################
+
+registry:
+  # Maximum number of times a password/secret can be reused for enrollment
+  # (default: -1, which means there is no limit)
+  maxenrollments: -1
+
+  # Contains identity information which is used when LDAP is disabled
+  identities:
+     #- name: {orgName}-admin
+     #  pass: {orgName}-adminpw
+     #- name: admin
+     - name: Admin
+       pass: adminpw
+       type: client
+       affiliation: ""
+       maxenrollments: -1
+       attrs:
+          hf.Registrar.Roles: "client,user,peer,validator,auditor"
+          hf.Registrar.DelegateRoles: "client,user,validator,auditor"
+          hf.Revoker: true
+          hf.IntermediateCA: false
+          hf.GenCRL: true
+          hf.Registrar.Attributes: "*"
+
+affiliations:
+   uni.com:
+   universitymember.uni.com:
+   publicmember.uni.com:
+   universitymember:
+     - member1
+     - member2
+   publicmember:
+     - member1

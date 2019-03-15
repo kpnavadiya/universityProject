@@ -1,0 +1,41 @@
+version: '2'
+
+networks:
+  behave:
+
+services:
+  ca.uni.com:
+    image: hyperledger/fabric-ca
+    environment:
+      - FABRIC_CA_HOME=/var/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.uni.com
+      - CORE_LOGGING_LEVEL=DEBUG
+      #- FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_CA_CERTFILE=/var/hyperledger/fabric-ca-server-config/ca.universitymember.uni.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/var/hyperledger/fabric-ca-server-config/dff174d523a8fc0de615a1883055aa22ee754884ff15865411d41d75f40f9900_sk
+    ports:
+      - "7054:7054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw'
+    volumes:
+      - ../crypto-config/peerOrganizations/universitymember.uni.com/ca/:/var/hyperledger/fabric-ca-server-config
+    container_name: ca.uni.com
+    networks:
+      - behave
+
+  ca.public.com:
+    image: hyperledger/fabric-ca
+    environment:
+      - FABRIC_CA_HOME=/var/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.public.com
+      - CORE_LOGGING_LEVEL=DEBUG
+      #- FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_CA_CERTFILE=/var/hyperledger/fabric-ca-server-config/ca.publicmember.uni.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/var/hyperledger/fabric-ca-server-config/f32df03ad10566a80c1f5012448fb8e18960ab85caf6af310e85c3ab20547d60_sk
+    ports:
+      - "8054:7054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw'
+    volumes:
+      - ../crypto-config/peerOrganizations/publicmember.uni.com/ca/:/var/hyperledger/fabric-ca-server-config
+    container_name: ca.public.com
+    networks:
+      - behave

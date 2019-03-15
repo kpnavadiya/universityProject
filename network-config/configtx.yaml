@@ -1,0 +1,72 @@
+---
+Profiles:
+
+    TwoOrgsOrdererGenesis:
+        Orderer:
+            <<: *OrdererDefaults
+            Organizations:
+                - *OrdererUniversity
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *UniveersityMember
+                    - *PublicMember
+                    
+    TwoOrgsChannel:
+        Consortium: SampleConsortium
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *UniveersityMember
+                - *PublicMember 
+   
+             
+                
+Organizations:
+
+    - &OrdererUniversity
+        Name: OrdererUniversity
+        ID: OrdererMSP
+        MSPDir: ../crypto-config/ordererOrganizations/uni.com/msp
+
+    - &UniveersityMember
+        Name: UniversityMemberMSP
+        ID: UniversityMemberMSP
+        MSPDir: ../crypto-config/peerOrganizations/universitymember.uni.com/msp
+        AnchorPeers:
+            - Host: peer0.universitymember.uni.com
+              Port: 7051
+        # Policies:
+        #     Admins:
+        #         Type: Signature
+        #         Rule: "OR('PublicMemberMSP.admin')"
+
+    - &PublicMember
+        Name: PublicMemberMSP
+        ID: PublicMemberMSP
+        MSPDir: ../crypto-config/peerOrganizations/publicmember.uni.com/msp
+        AnchorPeers:
+            - Host: peer0.publicmember.uni.com
+              Port: 7051
+
+Orderer: &OrdererDefaults
+
+    OrdererType: kafka
+    Addresses:
+        - orderer0.uni.com:7050
+        - orderer1.uni.com:7050
+        - orderer2.uni.com:7050
+    BatchTimeout: 2s
+    BatchSize:
+        MaxMessageCount: 10
+        AbsoluteMaxBytes: 99 MB
+        PreferredMaxBytes: 512 KB
+    Kafka:
+        Brokers:
+            - kafka0:9092
+            - kafka1:9092
+            - kafka2:9092
+            - kafka3:9092
+    Organizations:
+Application: &ApplicationDefaults
+    Organizations:
