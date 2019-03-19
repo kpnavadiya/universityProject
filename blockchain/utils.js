@@ -240,6 +240,106 @@ class OrganizationClient extends EventEmitter {
     }
   }
 
+  async  checkInstalled(chaincodeId, chaincodeVersion, chaincodePath) {
+    let {
+      chaincodes
+    } = await this._channel.queryInstantiatedChaincodes();
+    if (!Array.isArray(chaincodes)) {
+      return false;
+    }
+    return chaincodes.some(cc =>
+      cc.name === chaincodeId &&
+      cc.path === chaincodePath &&
+      cc.version === chaincodeVersion);
+  }
+
+  async install(chaincodeId, chaincodeVersion, chaincodePath) {
+    const request = {
+      targets: this._peers,
+      chaincodePath,
+      chaincodeId,
+      chaincodeVersion
+    };
+  
+    // Make install proposal to all peers
+    let results;
+    try {
+      results = await this._client.installChaincode(request);
+    } catch (e) {
+      console.log(
+        `Error sending install proposal to peer! Error: ${e.message}`);
+      throw e;
+    }
+    const proposalResponses = results[0];
+    const allGood = proposalResponses
+      .every(pr => pr.response && pr.response.status == 200);
+    return allGood;
+  }
+  
+  async instantiate(chaincodeId, chaincodeVersion, ...args) {
+    let proposalResponses, proposal;
+    const txId = this._client.newTransactionID();
+    try {
+      const request = {
+        chaincodeType: 'golang',
+        chaincodeId,
+        chaincodeVersion,
+        fcn: 'init',
+        args:[],
+        txId
+      };
+      const results = await this._channel.sendInstantiateProposal(request);
+      proposalResponses = results[0];
+      proposal = results[1];
+  
+      let allGood = proposalResponses
+        .every(pr => pr.response && pr.response.status == 200);
+  
+      if (!allGood) {
+        throw new Error(
+          `Proposal rejected by some (all) of the peers: ${proposalResponses}`);
+      }
+    } catch (e) {
+      throw e;
+    }
+  
+    try {
+      const request = {
+        proposalResponses,
+        proposal
+      };
+      const deployId = txId.getTransactionID();
+      const transactionCompletePromises = this._eventHubs.map(eh => {
+        eh.connect();
+  
+        return new Promise((resolve, reject) => {
+          // Set timeout for the transaction response from the current peer
+          const responseTimeout = setTimeout(() => {
+            eh.unregisterTxEvent(deployId);
+            reject(new Error('Peer did not respond in a timely fashion!'));
+          }, TRANSACTION_TIMEOUT);
+  
+          eh.registerTxEvent(deployId, (tx, code) => {
+            clearTimeout(responseTimeout);
+            eh.unregisterTxEvent(deployId);
+            if (code != 'VALID') {
+              reject(new Error(
+                `Peer has rejected transaction with code: ${code}`));
+            } else {
+              resolve();
+            }
+          });
+        });
+      });
+  
+      transactionCompletePromises.push(this._channel.sendTransaction(request));
+      await transactionCompletePromises;
+    } catch (e) {
+      throw e;
+    }
+  }
+  
+  
 }
 
 /**
@@ -367,5 +467,8 @@ module.exports.unmarshalResult = function (result) {
     transactions
   };
 };
+
+
+
  
 exports.orgClient = OrganizationClient;
