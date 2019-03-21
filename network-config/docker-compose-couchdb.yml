@@ -10,7 +10,7 @@ services:
         extends:
             file: docker-compose-base.yml
             service: couchdb
-        container_name: couchdb01
+        container_name: universitymemberpeer0_couchdb
         # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
         # for uni map it to utilize Fauxton User Interface in dev environments.
         ports:
@@ -32,7 +32,7 @@ services:
         extends:
             file: docker-compose-base.yml
             service: couchdb
-        container_name: couchdb02
+        container_name: publicmemberpeer0_couchdb
         # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
         # for uni map it to utilize Fauxton User Interface in dev environments.
         ports:
@@ -54,7 +54,7 @@ services:
         extends:
             file: docker-compose-base.yml
             service: couchdb
-        container_name: couchdb11
+        container_name: universitymemberpeer1_couchdb
         # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
         # for uni map it to utilize Fauxton User Interface in dev environments.
         ports:
@@ -76,7 +76,7 @@ services:
         extends:
             file: docker-compose-base.yml
             service: couchdb
-        container_name: couchdb12
+        container_name: publicmemberpeer1_couchdb
         # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
         # for uni map it to utilize Fauxton User Interface in dev environments.
         ports:

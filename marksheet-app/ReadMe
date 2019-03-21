@@ -1,0 +1,19 @@
+### Web Appliction for the Universitychain ####
+
+Features of the App
+
+---> Enter student marksheet record using web into the blockchain
+---> get marksheet details of the student
+
+
+Step to run :
+
+1. Run step by step command which can be written in "startNetwork.sh" script
+
+2. go to the marksheet-app directory
+	- Run npm install
+	- Run node registerAdmin.js
+	- Run node registerUser.js
+	- Run node server.js
+
+

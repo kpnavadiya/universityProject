@@ -1,12 +1,4 @@
 'use strict';
-/*
-* Copyright IBM Corp All Rights Reserved
-*
-* SPDX-License-Identifier: Apache-2.0
-*/
-/*
- * Enroll the admin user
- */
 
 var Fabric_Client = require('fabric-client');
 var Fabric_CA_Client = require('fabric-ca-client');
@@ -20,7 +12,7 @@ var fabric_client = new Fabric_Client();
 var fabric_ca_client = null;
 var admin_user = null;
 var member_user = null;
-var store_path = path.join(__dirname, 'hfc-key-store');
+var store_path = path.join(os.homedir(), '.hfc-key-store');
 console.log(' Store path:'+store_path);
 
 // create the key value store as defined in the fabric-client/config/default.json 'key-value-store' setting
@@ -40,13 +32,11 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
     };
     // be sure to change the http to https when the CA is running TLS enabled
     fabric_ca_client = new Fabric_CA_Client('http://localhost:7054', tlsOptions , 'ca.uni.com', crypto_suite);
-    console.log("Port Started 7054......")
+
     // first check to see if the admin is already enrolled
     return fabric_client.getUserContext('admin', true);
-//});
-    }).then((user_from_store) => {
+}).then((user_from_store) => {
     if (user_from_store && user_from_store.isEnrolled()) {
-        console.log('Admin Test loaded......')
         console.log('Successfully loaded admin from persistence');
         admin_user = user_from_store;
         return null;
@@ -72,7 +62,6 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
     }
 }).then(() => {
     console.log('Assigned the admin user to the fabric client ::' + admin_user.toString());
-    console.log('################## Admin ################################')
 }).catch((err) => {
     console.error('Failed to enroll admin: ' + err);
 });

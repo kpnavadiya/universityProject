@@ -1,11 +1,6 @@
 'use strict';
-/*
-* Copyright IBM Corp All Rights Reserved
-*
-* SPDX-License-Identifier: Apache-2.0
-*/
-/*
- * Register and Enroll a user
+/**
+ * CopyRight @kpnavadiya 2019
  */
 
 var Fabric_Client = require('fabric-client');
@@ -20,7 +15,7 @@ var fabric_client = new Fabric_Client();
 var fabric_ca_client = null;
 var admin_user = null;
 var member_user = null;
-var store_path = path.join(__dirname, 'hfc-key-store');
+var store_path = path.join(os.homedir(), '.hfc-key-store');
 console.log(' Store path:'+store_path);
 
 // create the key value store as defined in the fabric-client/config/default.json 'key-value-store' setting
@@ -48,21 +43,21 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
         console.log('Successfully loaded admin from persistence');
         admin_user = user_from_store;
     } else {
-        throw new Error('Failed to get admin.... run enrollAdmin.js');
+        throw new Error('Failed to get admin.... run registerAdmin.js');
     }
 
     // at this point we should have the admin user
     // first need to register the user with the CA server
-    return fabric_ca_client.register({enrollmentID: 'user5', affiliation: 'org1.department1',role: 'client'}, admin_user);
+    return fabric_ca_client.register({enrollmentID: 'user1', affiliation: ''}, admin_user);
 }).then((secret) => {
     // next we need to enroll the user with CA server
-    console.log('Successfully registered user5 - secret:'+ secret);
+    console.log('Successfully registered user1 - secret:'+ secret);
 
-    return fabric_ca_client.enroll({enrollmentID: 'user5', enrollmentSecret: secret});
+    return fabric_ca_client.enroll({enrollmentID: 'user1', enrollmentSecret: secret});
 }).then((enrollment) => {
-  console.log('Successfully enrolled member user "user5" ');
+  console.log('Successfully enrolled member user "user1" ');
   return fabric_client.createUser(
-     {username: 'user5',
+     {username: 'user1',
      mspid: 'UniversityMemberMSP',
      cryptoContent: { privateKeyPEM: enrollment.key.toBytes(), signedCertPEM: enrollment.certificate }
      });
@@ -71,7 +66,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 
      return fabric_client.setUserContext(member_user);
 }).then(()=>{
-     console.log('User was successfully registered and enrolled and is ready to interact with the fabric network');
+     console.log('User1 was successfully registered and enrolled and is ready to intreact with the fabric network');
 
 }).catch((err) => {
     console.error('Failed to register: ' + err);

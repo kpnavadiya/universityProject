@@ -10,9 +10,9 @@ const readCryptoFile =
 const config = {
   channelName: 'mychannel',
   channelConfig: fs.readFileSync(resolve(__dirname, '../configuration/channel.tx')),
-  chaincodeId: 'marksheet',
+  chaincodeId: 'cama',
   chaincodeVersion: 'v1',
-  chaincodePath: 'marksheet',
+  chaincodePath: 'cama',
   orderer0: {
     hostname: 'orderer0.uni.com',
     url: 'grpc://localhost:7050',

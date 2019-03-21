@@ -1,6 +1,9 @@
+# Run Web Appliction marksheet validation
+
+--> Go to marksheet-app
+
+
 # Create Channel using Node Sdk
-# Join peer
-# Install chaincode, Instatiate
 1. Run ./start.sh // This script will start all container.
 2. Than go to the "blockchain " directory
      -->Run bellow command

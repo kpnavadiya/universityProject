@@ -1,0 +1,116 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hyperledger Fabric Marksheet Application</title>
+    <link rel="icon" href="" type="image/gif">
+
+    <!-- require jquery and bootstrap scripts -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+    
+    <!-- adding style here -->
+    <style type="text/css">
+      header{
+        background-color: lightgray;
+        font-size:20px;
+        padding:15px;
+      }
+      header, .form-group{
+        margin-bottom: 3%;
+      }
+      .form-group{
+        width:50%;
+      }
+      #body{
+        margin-left:3%;
+        margin-right:3%;
+      }
+      .form-control{
+        margin: 8px;
+      }
+      #right_header{
+        width:20%;
+        font-size:15px;
+        margin-right:0px;
+      }
+      #left_header{
+        margin-left:0;
+        width:40%;
+        display:inline-block;
+      } 
+      #id {
+        width:49%;
+        display: inline-block;
+      }
+      table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+      }
+      td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+      }
+      tr:nth-child(even) {
+          background-color: #dddddd;
+      }
+    </style>
+  </head>
+  <body ng-app="application" ng-controller="appController">
+    <header>
+      <div id="left_header">Hyperledger Fabric Marksheet Application</div>
+      <i id="right_header">Example Blockchain Application for Studnet Marksheet Validation using Hyperledger Fabric</i>
+    </header>
+
+    <div id="body">
+
+      <div class="form-group">
+        <label>View a Specific Student Marksheet</label><br>
+        <h5 style="color:red;margin-bottom:2%" id="error_query">Error: Please enter a valid Marksheet Id</h5>
+        
+        Enter a Marksheet number: <input id="createName" class="form-control" type="text" placeholder="Ex: 3" ng-model="tuna_id">
+        <input id="querySubmit" type="submit" value="Get Details" class="btn btn-primary" ng-click="queryMarksheet()">
+      </div>
+
+      <table id="query_marksheet" class="table" align="center">
+
+        <tr>
+          <th>Student_Name</th>
+          <th>Enrollment_No</th>
+          <th>Exam_type</th>
+          <th>Samester</th>
+          <th>CGPA</th>
+        </tr>
+
+        <tr>
+          <td>{{query_marksheet.name}}</td>
+          <td>{{query_marksheet.enrolno}}</td>
+          <td>{{query_marksheet.exam}}</td>
+          <td>{{query_marksheet.samester}}</td>
+          <td>{{query_marksheet.cgpa}}</td>
+        </tr>
+      </table>
+
+      <div class="form-group">
+        <label>Create Student Marksheet Record</label>
+        <h5 style="color:green;margin-bottom:2%" id="success_create">Success! Tx ID: {{create_tuna}}</h5>
+        <br>
+        Enter Marksheet id: <input class="form-control" type="text" placeholder="Ex: 11" ng-model="marksheet.id">
+        Enter name of student: <input class="form-control" type="text" placeholder="Ex: kp" ng-model="marksheet.name">
+        Enter student enrollment no: <input class="form-control" type="text" placeholder="Ex: 101" ng-model="marksheet.enrolno"> 
+        Enter exam type(ragular or remedial): <input class="form-control" type="text" placeholder="Ex: ragular" ng-model="marksheet.exam">
+        Enter samester: <input class="form-control" type="text" placeholder="Ex: 7" ng-model="marksheet.samester">
+        Enter cgpa: <input class="form-control" type="text" placeholder="Ex: 8.2" ng-model="marksheet.cgpa">
+        <input id="createSubmit" type="submit" value="Add Marksheet" class="btn btn-primary" ng-click="createMarksheet()"> 
+      </div>
+
+    </div>
+  </body>
+    <!-- requiring the angular page -->
+    <script type="text/javascript" src="app.js"> </script>
+</html>

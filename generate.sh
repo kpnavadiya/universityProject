@@ -28,6 +28,7 @@ fi
 
 # generate channel configuration transaction
 configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./config/channel.tx -channelID $CHANNEL_NAME
+#bin/configtxgen -profile TestChannel -outputCreateChannelTx ./config/testchannel.tx -channelID testchannel
 if [ "$?" -ne 0 ]; then
   echo "Failed to generate channel configuration transaction..."
   exit 1
