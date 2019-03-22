@@ -73,7 +73,7 @@
         <label>View a Specific Student Marksheet</label><br>
         <h5 style="color:red;margin-bottom:2%" id="error_query">Error: Please enter a valid Marksheet Id</h5>
         
-        Enter a Marksheet number: <input id="createName" class="form-control" type="text" placeholder="Ex: 3" ng-model="tuna_id">
+        Enter a Marksheet number: <input id="createName" class="form-control" type="text" placeholder="Ex: 3" ng-model="marksheet_id">
         <input id="querySubmit" type="submit" value="Get Details" class="btn btn-primary" ng-click="queryMarksheet()">
       </div>
 
@@ -98,7 +98,7 @@
 
       <div class="form-group">
         <label>Create Student Marksheet Record</label>
-        <h5 style="color:green;margin-bottom:2%" id="success_create">Success! Tx ID: {{create_tuna}}</h5>
+        <h5 style="color:green;margin-bottom:2%" id="success_create">Success! Tx ID: {{create_marksheet}}</h5>
         <br>
         Enter Marksheet id: <input class="form-control" type="text" placeholder="Ex: 11" ng-model="marksheet.id">
         Enter name of student: <input class="form-control" type="text" placeholder="Ex: kp" ng-model="marksheet.name">

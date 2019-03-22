@@ -36,7 +36,7 @@ var order = fabric_client.newOrderer('grpc://localhost:7050')
 channel.addOrderer(order);
 
 var member_user = null;
-var store_path = path.join(os.homedir(), '.hfc-key-store');
+var store_path = path.join(__dirname, 'hfc-key-store');
 console.log('Store path:'+store_path);
 var tx_id = null;
 
@@ -114,6 +114,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
         // is required bacause the event registration must be signed
         let event_hub = fabric_client.newEventHub();
         event_hub.setPeerAddr('grpc://localhost:7053');
+	//console.log("event_hub : " +event_hub);
 
         // using resolve the promise so that result status may be processed
         // under the then clause rather than having the catch clause process
