@@ -13,6 +13,7 @@ export MSYS_NO_PATHCONV=1
 
 #../universitychain/start.sh
 
+# docker exec -it cli bash
 # Create Channel
 export CHANNEL_NAME=mychannel
 export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/universitymember.uni.com/users/Admin@universitymember.uni.com/msp 
