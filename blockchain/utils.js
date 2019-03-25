@@ -285,7 +285,7 @@ class OrganizationClient extends EventEmitter {
         chaincodeId,
         chaincodeVersion,
         fcn: 'init',
-        args:[],
+        args:[""],
         txId
       };
       const results = await this._channel.sendInstantiateProposal(request);

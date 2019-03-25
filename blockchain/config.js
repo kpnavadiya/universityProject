@@ -8,11 +8,11 @@ const basePath = resolve(__dirname, '../configuration/certs');
 const readCryptoFile =
   filename => fs.readFileSync(resolve(basePath, filename)).toString();
 const config = {
-  channelName: 'mychannel',
+  channelName: 'testchannel2',
   channelConfig: fs.readFileSync(resolve(__dirname, '../configuration/channel.tx')),
-  chaincodeId: 'cama',
+  chaincodeId: 'marksheet',
   chaincodeVersion: 'v1',
-  chaincodePath: 'cama',
+  chaincodePath: 'marksheet',
   orderer0: {
     hostname: 'orderer0.uni.com',
     url: 'grpc://localhost:7050',

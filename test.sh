@@ -9,7 +9,7 @@ peer chaincode query -o orderer2.uni.com:7050 -n mycc -c '{"Args":["queryMarkshe
 
 
 #Rich Query with index name explicitly specified:
-peer chaincode query -C mychannel -n mark2 -c '{"Args":["queryMarksheet", "{\"selector\":{\"docType\":\"mark\",\"enrolno\":\"1\"}, \"use_index\":[\"_design/indexOwnerDoc\", \"indexOwner\"]}"]}'
+peer chaincode query -C mychannel -n marksheet4 -c '{"Args":["readMarksheet", "{\"selector\":{\"docType\":\"name\",\"enrolno\":\"1\"}, \"use_index\":[\"_design/indexOwnerDoc\", \"indexOwner\"]}"]}'
 
 
 export CHANNEL_NAME=mychannel
@@ -19,3 +19,8 @@ peer chaincode invoke -o orderer0.uni.com:7050 -C mychannel -n marbles1 -c '{"Ar
 
 #--tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 peer chaincode query -C mychannel -n marbles1 -c '{"Args":["queryMarbles", "{\"selector\":{\"docType\":\"marble\",\"owner\":\"tom\"}, \"use_index\":[\"_design/indexOwnerDoc\", \"indexOwner\"]}"]}'
+
+# Cheack Indxing 
+docker logs peer0.universitymember.uni.com  2>&1 | grep "CouchDB index"
+
+docker exec -it cli peer chaincode query -o orderer2.example.com -C mychannel -n mycc -c '{"Args":["RichqueryPayments","{\"selector\":{\"trandt\":\"pay3\"}, \"use_index\":[\"_design/indexOwnerDoc\", \"indexOwner\"]}"]}'

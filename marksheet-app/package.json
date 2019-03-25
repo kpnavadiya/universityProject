@@ -1,7 +1,7 @@
 {
-    "name": "Fabric-tuna-app",
+    "name": "Fabric-marksheet-app",
     "version": "1.0.0",
-    "description": "Hyperledger Fabric MOOC Sample Application",
+    "description": "Hyperledger Fabric Sample Application",
     "main": "server.js",
     "dependencies": {
         "fabric-ca-client": "^1.0.2",
@@ -16,9 +16,9 @@
     "keywords": [
         "Hyperledger",
         "Fabric",
-        "Oceans",
-        "Tuna",
-        "Fishing",
+        "University",
+        "MArksheet",
+        "Validation",
         "Sample",
         "Application"
     ]

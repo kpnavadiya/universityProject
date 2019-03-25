@@ -231,8 +231,8 @@ services:
             - CORE_PEER_ADDRESS=peer0.universitymember.uni.com:7051
             - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.universitymember.uni.com:7051
             - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.universitymember.uni.com:7051
-            - CORE_PEER_GOSSIP_ORGLEADER=${CORE_PEER_GOSSIP_ORGLEADER_PEER0_ORG1}
-            - CORE_PEER_GOSSIP_USELEADERELECTION=${CORE_PEER_GOSSIP_USELEADERELECTION_PEER0_ORG1}
+            - CORE_PEER_GOSSIP_ORGLEADER=${CORE_PEER_GOSSIP_ORGLEADER_peer0_universitymember}
+            - CORE_PEER_GOSSIP_USELEADERELECTION=${CORE_PEER_GOSSIP_USELEADERELECTION_peer0_universitymember}
             - CORE_PEER_LOCALMSPID=UniversityMemberMSP
             - CORE_PEER_TLS_CLIENTROOTCAS_FILES=/var/hyperledger/users/Admin@universitymember.uni.com/tls/ca.crt
             - CORE_PEER_TLS_CLIENTCERT_FILE=/var/hyperledger/users/Admin@universitymember.uni.com/tls/client.crt
@@ -283,8 +283,8 @@ services:
             - CORE_PEER_ADDRESS=peer1.universitymember.uni.com:7051
             - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.universitymember.uni.com:7051
             - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.universitymember.uni.com:7051
-            - CORE_PEER_GOSSIP_ORGLEADER=${CORE_PEER_GOSSIP_ORGLEADER_peer1_ORG2}
-            - CORE_PEER_GOSSIP_USELEADERELECTION=${CORE_PEER_GOSSIP_USELEADERELECTION_peer1_ORG2}
+            - CORE_PEER_GOSSIP_ORGLEADER=${CORE_PEER_GOSSIP_ORGLEADER_peer1_universitymember}
+            - CORE_PEER_GOSSIP_USELEADERELECTION=${CORE_PEER_GOSSIP_USELEADERELECTION_peer1_universitymember}
             - CORE_PEER_LOCALMSPID=UniversityMemberMSP
             - CORE_PEER_TLS_CLIENTROOTCAS_FILES=/var/hyperledger/users/Admin@universitymember.uni.com/tls/ca.crt
             - CORE_PEER_TLS_CLIENTCERT_FILE=/var/hyperledger/users/Admin@universitymember.uni.com/tls/client.crt

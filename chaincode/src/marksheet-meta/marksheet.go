@@ -33,7 +33,7 @@
 	 "encoding/json"
 	 "fmt"
 	 "strconv"
-	 //"strings"
+	 "strings"
 	 
  
 	 "github.com/hyperledger/fabric/core/chaincode/shim"
@@ -46,7 +46,7 @@
  
  // Define the car structure, with 5 properties.  Structure tags are used by encoding/json library
  type Marksheet struct {
-	 ObjectType string `json:"docType"`
+	 //ObjectType string `json:"docType"`
 	 Name   string `json:"name"`
 	 EnrolNo  string `json:"enrolno"`
 	 Exam string `json:"exam"`
@@ -80,49 +80,106 @@
 		 return s.createMarksheet(APIstub, args)
 	 } else if function == "queryAllMarksheet" {
 		 return s.queryAllMarksheet(APIstub)
-	}
-	//  } else if function == "queryMarksheetByEnrollmentNo" {
-	// 	 return s.queryMarksheetByEnrollmentNo(APIstub, args)
-	//  } else if function == "readMarksheet" {
-	// 	 return s.readMarksheet(APIstub, args)
-	//  }
+	 } else if function == "queryMarksheetByEnrollmentNo" {
+		 return s.queryMarksheetByEnrollmentNo(APIstub, args)
+	 } else if function == "readMarksheet" {
+		 return s.readMarksheet(APIstub, args)
+	 }
  
 	 return shim.Error("Invalid Smart Contract function name.")
  }
-//  func (t *SmartContract) queryMarksheetByEnrollmentNo(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+ func (t *SmartContract) queryMarksheetByEnrollmentNo(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-// 	//   0
-// 	// "bob"
-// 	if len(args) < 1 {
-// 		return shim.Error("Incorrect number of arguments. Expecting 1")
-// 	}
+	//   0
+	// "bob"
+	if len(args) < 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
 
-// 	enrolno := strings.ToLower(args[0])
+	enrolno := strings.ToLower(args[0])
 
-// 	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"mark\",\"enrolno\":\"%s\"}}", enrolno)
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"name\",\"enrolno\":\"%s\"}}", enrolno)
 
-// 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
-// 	if err != nil {
-// 		return shim.Error(err.Error())
-// 	}
-// 	return shim.Success(queryResults)
-// }
-// func (t *SmartContract) readMarksheet(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	return shim.Success(queryResults)
+}
+func (t *SmartContract) readMarksheet(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-// 	//   0
-// 	// "queryString"
-// 	if len(args) < 1 {
-// 		return shim.Error("Incorrect number of arguments. Expecting 1")
-// 	}
+	//   0
+	// "queryString"
+	if len(args) < 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
 
-// 	queryString := args[0]
+	queryString := args[0]
 
-// 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
-// 	if err != nil {
-// 		return shim.Error(err.Error())
-// 	}
-// 	return shim.Success(queryResults)
-// }
+	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	return shim.Success(queryResults)
+}
+// =========================================================================================
+// getQueryResultForQueryString executes the passed in query string.
+// Result set is built and returned as a byte array containing the JSON results.
+// =========================================================================================
+func getQueryResultForQueryString(stub shim.ChaincodeStubInterface, queryString string) ([]byte, error) {
+
+	fmt.Printf("- getQueryResultForQueryString queryString:\n%s\n", queryString)
+
+	resultsIterator, err := stub.GetQueryResult(queryString)
+	if err != nil {
+		return nil, err
+	}
+	defer resultsIterator.Close()
+
+	buffer, err := constructQueryResponseFromIterator(resultsIterator)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf("- getQueryResultForQueryString queryResult:\n%s\n", buffer.String())
+
+	return buffer.Bytes(), nil
+}
+// ===========================================================================================
+// constructQueryResponseFromIterator constructs a JSON array containing query results from
+// a given result iterator
+// ===========================================================================================
+func constructQueryResponseFromIterator(resultsIterator shim.StateQueryIteratorInterface) (*bytes.Buffer, error) {
+	// buffer is a JSON array containing QueryResults
+	var buffer bytes.Buffer
+	buffer.WriteString("[")
+
+	bArrayMemberAlreadyWritten := false
+	for resultsIterator.HasNext() {
+		queryResponse, err := resultsIterator.Next()
+		if err != nil {
+			return nil, err
+		}
+		// Add a comma before array members, suppress it for the first array member
+		if bArrayMemberAlreadyWritten == true {
+			buffer.WriteString(",")
+		}
+		buffer.WriteString("{\"Key\":")
+		buffer.WriteString("\"")
+		buffer.WriteString(queryResponse.Key)
+		buffer.WriteString("\"")
+
+		buffer.WriteString(", \"Record\":")
+		// Record is a JSON object, so we write as-is
+		buffer.WriteString(string(queryResponse.Value))
+		buffer.WriteString("}")
+		bArrayMemberAlreadyWritten = true
+	}
+	buffer.WriteString("]")
+
+	return &buffer, nil
+}
+
  func (s *SmartContract) queryMarksheet(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
  
 	 if len(args) != 1 {

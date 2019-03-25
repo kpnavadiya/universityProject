@@ -20,8 +20,8 @@ app.controller('appController', function($scope, appFactory){
 		appFactory.queryMarksheet(id, function(data){
 			$scope.query_marksheet = data;
 
-			if ($scope.query_marksheet == "Could not locate tuna"){
-				console.log()
+			if ($scope.query_marksheet == "Could not locate marksheet"){
+				console.log("test")
 				$("#error_query").show();
 			} else{
 				$("#error_query").hide();

@@ -25,7 +25,7 @@ peer channel create -o orderer0.uni.com:7050 -c $CHANNEL_NAME -f ./configs/chann
 peer channel join -b mychannel.block
 # Install chaincode
 peer chaincode install -n marksheet -p github.com/chaincode/src/marksheet -v v0
-peer chaincode instantiate -o orderer0.uni.com:7050 -C mychannel -n marksheet github.com/chaincode/src/marksheet -v v0 -c '{"Args": []}'
+peer chaincode instantiate -o orderer0.uni.com:7050 -C mychannel -n marksheet github.com/chaincode/src/marksheet -v v0 -c '{"Args": ["init"]}'
 peer chaincode invoke -o orderer2.uni.com:7050 -n marksheet -c '{"Args":["initLedger"]}' -C mychannel
 
 printf "\nTotal execution time : $(($(date +%s) - starttime)) secs ...\n\n"

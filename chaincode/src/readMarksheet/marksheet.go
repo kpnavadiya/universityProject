@@ -30,9 +30,9 @@
   */
  import (
 	 "bytes"
-	 "encoding/json"
+	 //"encoding/json"
 	 "fmt"
-	 "strconv"
+	 //"strconv"
 	 //"strings"
 	 
  
@@ -74,55 +74,14 @@
 	 // Route to the appropriate handler function to interact with the ledger appropriately
 	 if function == "queryMarksheet" {
 		 return s.queryMarksheet(APIstub, args)
-	 } else if function == "initLedger" {
-		 return s.initLedger(APIstub)
-	 } else if function == "createMarksheet" {
-		 return s.createMarksheet(APIstub, args)
 	 } else if function == "queryAllMarksheet" {
 		 return s.queryAllMarksheet(APIstub)
-	}
-	//  } else if function == "queryMarksheetByEnrollmentNo" {
-	// 	 return s.queryMarksheetByEnrollmentNo(APIstub, args)
-	//  } else if function == "readMarksheet" {
-	// 	 return s.readMarksheet(APIstub, args)
-	//  }
+	 }
+	
  
 	 return shim.Error("Invalid Smart Contract function name.")
  }
-//  func (t *SmartContract) queryMarksheetByEnrollmentNo(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-// 	//   0
-// 	// "bob"
-// 	if len(args) < 1 {
-// 		return shim.Error("Incorrect number of arguments. Expecting 1")
-// 	}
-
-// 	enrolno := strings.ToLower(args[0])
-
-// 	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"mark\",\"enrolno\":\"%s\"}}", enrolno)
-
-// 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
-// 	if err != nil {
-// 		return shim.Error(err.Error())
-// 	}
-// 	return shim.Success(queryResults)
-// }
-// func (t *SmartContract) readMarksheet(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
-
-// 	//   0
-// 	// "queryString"
-// 	if len(args) < 1 {
-// 		return shim.Error("Incorrect number of arguments. Expecting 1")
-// 	}
-
-// 	queryString := args[0]
-
-// 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
-// 	if err != nil {
-// 		return shim.Error(err.Error())
-// 	}
-// 	return shim.Success(queryResults)
-// }
  func (s *SmartContract) queryMarksheet(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 		
 	 if len(args) != 1 {
@@ -136,50 +95,7 @@
 	 return shim.Success(marksheetAsBytes)
  }
  
- func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
-	 marksheet := []Marksheet{
-		 Marksheet{Name: "kp", EnrolNo: "1", Exam: "rag", Samester: "6", CGPA: "8.6"},
-		 Marksheet{Name: "as", EnrolNo: "2", Exam: "rag", Samester: "6", CGPA: "8.6"},
-		 Marksheet{Name: "js", EnrolNo: "3", Exam: "rag", Samester: "6", CGPA: "8.6"},
-		 Marksheet{Name: "dm", EnrolNo: "4", Exam: "rag", Samester: "6", CGPA: "8.6"},		 
-	 }
- 
-	 i := 0
-	 for i < len(marksheet) {
-		 fmt.Println("i is ", i)
-		 marksheetAsBytes, _ := json.Marshal(marksheet[i])
-		 APIstub.PutState(strconv.Itoa(i+1), marksheetAsBytes)
-		 fmt.Println("Added", marksheet[i])
-		 i = i + 1
-	 }
- 
-	 return shim.Success(nil)
- }
- 
- func (s *SmartContract) createMarksheet(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
- 
-	 if len(args) != 6 {
-		 return shim.Error("Incorrect number of arguments. Expecting 5")
-	 }
- 
-	 var marksheet = Marksheet{Name: args[1], EnrolNo: args[2], Exam: args[3], Samester: args[4], CGPA: args[5]}
-	 
-	 // Check if allready that key is present
-	 marksheetAsBytes, err := APIstub.GetState(args[0])
-	 if err != nil {
-			return shim.Error("failed to get marksheet!!!" + err.Error())
-	 } else if marksheetAsBytes != nil {
-			fmt.Println("This key already exists: " + args[0])
-			return shim.Error("This key already exists: " + args[0])
-	 }
-	 // Store data
-	 marksheetStoreAsBytes, _ := json.Marshal(marksheet)
-	 err1 := APIstub.PutState(args[0], marksheetStoreAsBytes)
-	 if err1 != nil {
-			return shim.Error(fmt.Sprintf("failed to record marksheet data !!! %s", args[0]))
-	 }
-	 return shim.Success(nil)
- }
+
  
  func (s *SmartContract) queryAllMarksheet(APIstub shim.ChaincodeStubInterface) sc.Response {
  
