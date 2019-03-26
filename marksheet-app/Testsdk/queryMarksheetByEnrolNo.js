@@ -23,7 +23,7 @@ channel.addPeer(peer);
 
 //
 var member_user = null;
-var store_path = path.join(__dirname, 'hfc-key-store');
+var store_path = path.join(__dirname, '../hfc-key-store');
 console.log('Store path:'+store_path);
 var tx_id = null;
 
@@ -55,7 +55,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 		//targets : --- letting this default to the peers assigned to the channel
 		chaincodeId: 'mark13',
 		fcn: 'queryMarksheetByEnrolNo',
-		args: ["{\"selector\":{\"EnrolNo\":\"1\"}, \"use_index\":[\"_design/indexMarksheetDoc\", \"indexMarksheetId\"]}"]
+		args: ["{\"selector\":{\"EnrolNo\":\"2\"}, \"use_index\":[\"_design/indexMarksheetDoc\", \"indexMarksheetId\"]}"]
 	};
 
 	// send the query proposal to the peer

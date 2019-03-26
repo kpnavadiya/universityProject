@@ -25,7 +25,7 @@ channel.addOrderer(order);
 
 //
 var member_user = null;
-var store_path = path.join(__dirname, 'hfc-key-store');
+var store_path = path.join(__dirname, '../hfc-key-store');
 console.log('Store path:'+store_path);
 var tx_id = null;
 
@@ -55,15 +55,15 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 	tx_id = fabric_client.newTransactionID();
 	console.log("Assigning transaction_id: ", tx_id._transaction_id);
 
-	// createCar chaincode function - requires 5 args, ex: args: ['CAR12', 'Honda', 'Accord', 'Black', 'Tom'],
-	// changeCarOwner chaincode function - requires 2 args , ex: args: ['CAR10', 'Dave'],
+	
 	// must send the proposal to endorsing peers
-	// ex: args: ['5', 'Honda', '101', 'rag', '6','5.6']
+	// create new marksheet recored
+	// ex: args: ['MarksheetId', 'EnrolNo', 'Name', 'Samester', 'ExamType','Cgpa']
 	var request = {
 		//targets: let default to the peer assigned to the client
 		chaincodeId: 'marksheet',
 		fcn: 'createMarksheet',
-		args: ['7', 'konda', '111', 'rag', '6','5.6'],
+		args: ['101', '1','konda', '6', 'ragular','8.6'],
 		chainId: 'mychannel',
 		txId: tx_id
 	};
