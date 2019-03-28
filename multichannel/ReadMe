@@ -1,0 +1,18 @@
+### RUN Multipal channel and chaincode #####
+
+step 1 : run step by setp all command in script startNetwork.sh
+
+step 2 : than go to 'sdk' directory 
+	==> Run npm install
+	==> registerAdmin.js , registerUser1.js, registerUser2.js
+step 3 : Query on network 
+	==> go to the 'Testsdk' directory 
+	==> In this directory file which contain the different query and invoke transction feature.
+
+# follwoing are details for the file
+
+1. createMarksheet.js and queryMarksheet.js ==> "this file for the first channel "mychannel". "
+2. query.js, create.js and queryMarksheetByEnrolNo.js ==> "this file for the second channel "testchannel". "
+
+->  Chaincode 'marksheet' are installed on the 'mychannel' channel.
+->  Chaincode 'mark' are installed on the 'testchannel' channel.
