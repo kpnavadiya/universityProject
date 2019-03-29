@@ -289,6 +289,11 @@ services:
             - CORE_PEER_TLS_CLIENTROOTCAS_FILES=/var/hyperledger/users/Admin@universitymember.uni.com/tls/ca.crt
             - CORE_PEER_TLS_CLIENTCERT_FILE=/var/hyperledger/users/Admin@universitymember.uni.com/tls/client.crt
             - CORE_PEER_TLS_CLIENTKEY_FILE=/var/hyperledger/users/Admin@universitymember.uni.com/tls/client.key
+            # STATE DATABASE
+            - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+            - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb1:6984
+            - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+            - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
         volumes:
             - ../crypto-config/peerOrganizations/universitymember.uni.com/peers/peer1.universitymember.uni.com/msp:/var/hyperledger/msp
             - ../crypto-config/peerOrganizations/universitymember.uni.com/peers/peer1.universitymember.uni.com/tls:/var/hyperledger/tls
@@ -299,6 +304,7 @@ services:
             - orderer1.uni.com
             - orderer2.uni.com
             - peer0.universitymember.uni.com
+            - couchdb1
         networks:
           behave:
              aliases:
@@ -306,6 +312,17 @@ services:
         ports:
           - 9051:7051
           - 9053:7053
+    
+    couchdb1:
+        container_name: couchdb1
+        image: hyperledger/fabric-couchdb
+        environment:
+          - COUCHDB_USER=
+          - COUCHDB_PASSWORD=
+        ports:
+          - "6984:5984"
+        networks:
+          - behave
 
     peer0.publicmember.uni.com:
         extends:

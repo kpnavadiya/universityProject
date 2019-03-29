@@ -1,165 +1,192 @@
+
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"strconv"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
-	pb "github.com/hyperledger/fabric/protos/peer"
+	sc "github.com/hyperledger/fabric/protos/peer"
 )
 
-type film struct {
-	FilmId     string `json:"filmId"`
-	FilmName   string `json:"filmName"`
-	Director   string `json:"director"`
-	Copyrights string `json:"copyrights"`
+type SmartContract struct {
 }
 
-type filmNetworth struct {
-	FilmId        string  `json:"filmId"`
-	Budget        float64 `json:"budget"`
-	CurrentProfit float64 `json:"currentProfit"`
+type Film struct {
+	Name   string `json:"name"`
+	Year  string `json:"year"`
+	Budget string `json:"budget"`
+	Copyrights  string `json:"copyrights"`
 }
 
-type camaChaincode struct {
+type FilmProfit{
+     Profit string `json:"profit"`
+
+}
+
+func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
+	return shim.Success(nil)
+}
+
+func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response {
+
+     function, args := APIstub.GetFunctionAndParameters()
+	
+	if function == "queryFilm" {
+		return s.queryFilm(APIstub, args)
+	} else if function == "initLedger" {
+		return s.initLedger(APIstub)
+	} else if function == "createFilm" {
+		return s.createFilm(APIstub, args)
+	} else if function == "queryAllFilms" {
+		return s.queryAllFilms(APIstub)
+	} else if function == "deleteFilm" {       
+			return s.deleteFilm(APIstub, args)	
+	} else if function == "changeCopyrights" {
+		return s.changeCopyrights(APIstub, args)
+	}
+
+	return shim.Error("Invalid Smart Contract function name.")
+}
+
+func (s *SmartContract) queryFilm(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting atleast 1 argument")
+	}
+
+	filmAsBytes, _ := APIstub.GetState(args[0])
+	return shim.Success(filmAsBytes)
+}
+
+func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
+	films := []Film{
+		Film{Name: "Spidermn", Year: "2011", Budget: "$2000", Copyrights: "Mahesh"},
+		Film{Name: "Terminator", Year: "1999", Budget: "$5000", Copyrights: "Suresh"},
+		Film{Name: "Hancock", Year: "2022", Budget: "$3000", Copyrights: "Naresh"},
+		Film{Name: "The Avengers", Year: "2011", Budget: "$4000", Copyrights: "Ganesh"},
+	}
+
+	i := 0
+	for i < len(films) {
+		fmt.Println("i is ", i)
+		filmAsBytes, _ := json.Marshal(films[i])
+		APIstub.PutState("FILM"+strconv.Itoa(i), filmAsBytes)
+		fmt.Println("Added", films[i])
+		i = i + 1
+	}
+
+	return shim.Success(nil)
+}
+
+func (s *SmartContract) createFilm(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 5 {
+		return shim.Error("Incorrect number of arguments. Expecting 5")
+	}
+
+	var film =  Film	
+	             {
+					Name: args[1], 
+					Year: args[2], 
+					Budget: args[3], 
+					Copyrights: args[4]
+				}
+    var profit = Profit{
+                         Profit: args[5]
+	                    }
+
+	filmAsBytes, _ := json.Marshal(film)
+	APIstub.PutState(args[0], filmAsBytes)
+
+	profitAsBytes,_ := json.Marshal(profit)
+
+	return shim.Success(nil)
+}
+
+func (s *SmartContract) queryAllFilms(APIstub shim.ChaincodeStubInterface) sc.Response {
+
+	startKey := "FILM0"
+	endKey := "FILM999"
+
+	resultsIterator, err := APIstub.GetStateByRange(startKey, endKey)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	defer resultsIterator.Close()
+
+	var buffer bytes.Buffer
+	buffer.WriteString("[")
+
+	bArrayMemberAlreadyWritten := false
+	for resultsIterator.HasNext() {
+		queryResponse, err := resultsIterator.Next()
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+		
+		if bArrayMemberAlreadyWritten == true {
+			buffer.WriteString(",")
+		}
+		buffer.WriteString("{\"Key\":")
+		buffer.WriteString("\"")
+		buffer.WriteString(queryResponse.Key)
+		buffer.WriteString("\"")
+
+		buffer.WriteString(", \"Record\":")
+		
+		buffer.WriteString(string(queryResponse.Value))
+		buffer.WriteString("}")
+		bArrayMemberAlreadyWritten = true
+	}
+	buffer.WriteString("]")
+
+	fmt.Printf("- queryAllFilms:\n%s\n", buffer.String())
+
+	return shim.Success(buffer.Bytes())
+}
+
+func (s *SmartContract) changeCopyrights(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	filmAsBytes, _ := APIstub.GetState(args[0])
+	film := Film{}
+
+	json.Unmarshal(filmAsBytes, &film)
+	film.Copyrights = args[1]
+
+	filmAsBytes, _ = json.Marshal(film)
+	APIstub.PutState(args[0], filmAsBytes)
+
+	return shim.Success(nil)
+}
+
+func (s *SmartContract) deleteFilm(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting at least 1 argument")
+	}
+
+	film := args[0]
+
+	err := APIstub.DelState(film)
+	if err != nil {
+		return shim.Error("Failed to delete the film")
+	}
+
+	return shim.Success(nil)
 }
 
 func main() {
 
-	err := shim.Start(new(camaChaincode))
-
+	err := shim.Start(new(SmartContract))
 	if err != nil {
-		fmt.Printf("Error starting the cama Contract: %s", err)
+		fmt.Printf("Error creating new Smart Contract: %s", err)
 	}
-
 }
 
-func (t *camaChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
-
-	fmt.Println("Successfully init chaincode")
-
-	return shim.Success(nil)
-
-}
-
-func (t *camaChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
-
-	fmt.Println("Start Invoke")
-	defer fmt.Println("Stop Invoke")
-
-	function, args := stub.GetFunctionAndParameters()
-
-	switch function {
-
-	case "createFilm":
-		return t.createFilm(stub, args)
-	case "getFilm":
-		return t.getFilm(stub, args)
-	case "getFilmNetworth":
-		return t.getFilmNetworth(stub, args)
-	default:
-		return shim.Error("Invalid invoke function name.")
-	}
-
-}
-
-func (t *camaChaincode) createFilm(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-
-	filmId := args[0]
-	filmName := args[1]
-	director := args[2]
-	copyrights := args[3]
-	budget, err1 := strconv.ParseFloat(args[4], 32)
-	currentProfit, err2 := strconv.ParseFloat(args[5], 32)
-
-	if err1 != nil || err2 != nil {
-		return shim.Error("Error parsing the values")
-	}
-
-	film := &film{filmId, filmName, director, copyrights}
-	filmBytes, err3 := json.Marshal(film)
-
-	if err3 != nil {
-		return shim.Error(err1.Error())
-	}
-
-	filmNetworth := &filmNetworth{filmId, budget, currentProfit}
-	filmNetworthBytes, err4 := json.Marshal(filmNetworth)
-
-	if err4 != nil {
-		return shim.Error(err2.Error())
-	}
-
-	err5 := stub.PutPrivateData("camaPublicData", filmId, filmBytes)
-
-	if err5 != nil {
-		return shim.Error(err5.Error())
-	}
-
-	err6 := stub.PutPrivateData("camaPrivateData", filmId, filmNetworthBytes)
-
-	if err6 != nil {
-		return shim.Error(err6.Error())
-	}
-
-	jsonFilm, err7 := json.Marshal(film)
-	if err7 != nil {
-		return shim.Error(err7.Error())
-	}
-
-	return shim.Success(jsonFilm)
-
-}
-
-func (t *camaChaincode) getFilm(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-
-	filmId := args[0]
-	film := film{}
-
-	filmBytes, err1 := stub.GetPrivateData("camaPublicData", filmId)
-	if err1 != nil {
-		return shim.Error(err1.Error())
-	}
-
-	err2 := json.Unmarshal(filmBytes, &film)
-
-	if err2 != nil {
-		fmt.Println("Error unmarshalling object with filmid: " + filmId)
-		return shim.Error(err2.Error())
-	}
-
-	jsonFilm, err3 := json.Marshal(film)
-	if err3 != nil {
-		return shim.Error(err3.Error())
-	}
-
-	return shim.Success(jsonFilm)
-
-}
-
-func (t *camaChaincode) getFilmNetworth(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-
-	filmId := args[0]
-	filmNetworth := filmNetworth{}
-
-	filmNetworthBytes, err1 := stub.GetPrivateData("camaPrivateData", filmId)
-	if err1 != nil {
-		return shim.Error(err1.Error())
-	}
-
-	err2 := json.Unmarshal(filmNetworthBytes, &filmNetworth)
-
-	if err2 != nil {
-		fmt.Println("Error unmarshalling object with FilmId: " + filmId)
-		return shim.Error(err2.Error())
-	}
-
-	jsonfilmNetworth, err3 := json.Marshal(filmNetworth)
-	if err3 != nil {
-		return shim.Error(err3.Error())
-	}
-
-	return shim.Success(jsonfilmNetworth)
-
-}

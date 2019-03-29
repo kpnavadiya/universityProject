@@ -46,7 +46,7 @@
  
  // Define the car structure, with 5 properties.  Structure tags are used by encoding/json library
  type Marksheet struct {
-	 //ObjectType string `json:"docType"`
+	 ObjectType string `json:"docType"`
 	 Name   string `json:"name"`
 	 EnrolNo  string `json:"enrolno"`
 	 Exam string `json:"exam"`

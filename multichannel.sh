@@ -6,8 +6,14 @@ export FABRIC_CFG_PATH=${PWD}/network-config
 
 
 ## for loop
-for i in {1..1000}
-do
-configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./configuration/test/test$i.tx -channelID test$i
+#for i in {1..1000}
+#do
+#configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./configuration/test/test$i.tx -channelID test$i
 
-done
+#done
+
+## mychannel ###
+configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./multichannel/mychannel.tx -channelID mychannel
+
+### testchannel ###
+configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./multichannel/testchannel.tx -channelID testchannel

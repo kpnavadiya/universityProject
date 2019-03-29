@@ -17,13 +17,14 @@ var fabric_client = new Fabric_Client();
 
 console.log("submit recording of a marksheet catch: ");
 
-var array = req.params.tuna.split("-");
+var array = req.params.marksheet.split("-");
 
 var key = array[0]
-var timestamp = array[2]
-var location = array[1]
-var vessel = array[4]
-var holder = array[3]
+var name = array[1]
+var  enrolno = array[2] 
+var exam = array[3]
+var samester = array[4] 
+var cgpa = array[5]
 
 
 var fabric_client = new Fabric_Client();

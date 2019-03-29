@@ -9,7 +9,7 @@ peer chaincode query -o orderer2.uni.com:7050 -n mycc -c '{"Args":["queryMarkshe
 
 
 #Rich Query with index name explicitly specified:
-peer chaincode query -C mychannel -n marksheet4 -c '{"Args":["readMarksheet", "{\"selector\":{\"docType\":\"name\",\"enrolno\":\"1\"}, \"use_index\":[\"_design/indexOwnerDoc\", \"indexOwner\"]}"]}'
+peer chaincode query -C mychannel -n mark7 -c '{"Args":["readMarksheet", "{\"selector\":{\"docType\":\"name\",\"enrolno\":\"1\"}, \"use_index\":[\"_design/indexOwnerDoc\", \"indexOwner\"]}"]}'
 
 
 export CHANNEL_NAME=mychannel
@@ -23,4 +23,4 @@ peer chaincode query -C mychannel -n marbles1 -c '{"Args":["queryMarbles", "{\"s
 # Cheack Indxing 
 docker logs peer0.universitymember.uni.com  2>&1 | grep "CouchDB index"
 
-docker exec -it cli peer chaincode query -o orderer2.example.com -C mychannel -n mycc -c '{"Args":["RichqueryPayments","{\"selector\":{\"trandt\":\"pay3\"}, \"use_index\":[\"_design/indexOwnerDoc\", \"indexOwner\"]}"]}'
+docker exec -it cli peer chaincode query -o orderer2.uni.com -C mychannel -n mark13 -c '{"Args":["queryMarksheetByEnrolNo","{\"selector\":{\"MarkshetId\":\"102\"}, \"use_index\":[\"_design/indexMarksheetDoc\", \"indexMarksheetId\"]}"]}'

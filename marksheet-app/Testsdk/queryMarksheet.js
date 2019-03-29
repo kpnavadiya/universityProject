@@ -53,9 +53,9 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 	// queryAllCars chaincode function - requires no arguments , ex: args: [''],
 	const request = {
 		//targets : --- letting this default to the peers assigned to the channel
-		chaincodeId: 'mark15',
+		chaincodeId: 'marksheet',
 		fcn: 'queryMarksheet',
-		args: ['101']
+		args: ['1']
 	};
 
 	// send the query proposal to the peer

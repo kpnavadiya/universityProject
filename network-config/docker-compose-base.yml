@@ -71,6 +71,7 @@ services:
             - CORE_PEER_PROFILE_ENABLED=true
             - CORE_PEER_MSPCONFIGPATH=/var/hyperledger/msp
             #- CORE_LEDGER_STATE_STATEDATABASE=LevelDB
+            #- CORE_LEDGER_STATE_STATEDATABASE=CouchDB
             - CORE_LOGGING_LEVEL=INFO
             - CORE_LOGGING_GOSSIP=${CORE_LOGGING_GOSSIP}
             - CORE_LOGGING_MSP=INFO
