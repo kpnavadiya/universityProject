@@ -14,8 +14,16 @@ var util = require('util');
 var os = require('os');
 
 //
+ function createMarksheet(key,name,enrolno,exam,samester,cgpa) {
 var fabric_client = new Fabric_Client();
 
+	// Get all parameter
+	// var key = key
+	// var name = name
+	// var enrolno = enrolno
+	// var exam = exam
+	// var samester = samester
+	// var cgpa = cgpa
 // setup the fabric network
 var channel = fabric_client.newChannel('mychannel');
 var peer = fabric_client.newPeer('grpc://localhost:7051');
@@ -63,7 +71,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 		//targets: let default to the peer assigned to the client
 		chaincodeId: 'marksheet',
 		fcn: 'createMarksheet',
-		args: ['101', '1','konda', '6', 'ragular','8.6'],
+		args: [key, name, enrolno, samester, exam, cgpa],
 		chainId: 'mychannel',
 		txId: tx_id
 	};
@@ -161,3 +169,6 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 }).catch((err) => {
 	console.error('Failed to invoke successfully :: ' + err);
 });
+}
+
+exports.test = createMarksheet ;

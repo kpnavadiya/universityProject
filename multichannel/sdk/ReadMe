@@ -1,0 +1,9 @@
+####CREATING API FOR THE PARTICULER CHAINCODE FUNCTION ######
+
+Given file are :
+
+app.js ===> main app file for the project.
+server.js ===> this file will be start the server.
+controller.js ==> it will be mideater between the server and client request
+router.js ==> the all routes for the api request
+  

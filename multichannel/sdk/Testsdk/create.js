@@ -13,16 +13,18 @@ var path = require('path');
 var util = require('util');
 var os = require('os');
 
-//
+//create marksheet function for chaincode 'mark'
+function create(key,enrolno,name,samester,exam,cgpa) {
+
 var fabric_client = new Fabric_Client();
-//var array = req.params.marksheet.split("-");
-var array = ['101','1','kp','ram','7','5.6']
-var key = array[0]
-var name = array[2]
-var  enrolno = array[1] 
-var exam = array[3]
-var samester = array[4] 
-var cgpa = array[5]
+//var array = req.params.markData.split("-");
+//var array = ['101','1','kp','7','8','5.6']
+// var key = array[0]
+// var name = array[2]
+// var  enrolno = array[1] 
+// var exam = array[4]
+// var samester = array[3] 
+// var cgpa = array[5]
 // setup the fabric network
 var channel = fabric_client.newChannel('testchannel');
 var peer = fabric_client.newPeer('grpc://localhost:7051');
@@ -37,6 +39,8 @@ console.log('Store path:'+store_path);
 var tx_id = null;
 
 // create the key value store as defined in the fabric-client/config/default.json 'key-value-store' setting
+
+
 Fabric_Client.newDefaultKeyValueStore({ path: store_path
 }).then((state_store) => {
 	// assign the store to the fabric client
@@ -168,3 +172,6 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 }).catch((err) => {
 	console.error('Failed to invoke successfully :: ' + err);
 });
+}
+
+exports.testCreate = create;
