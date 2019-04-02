@@ -14,8 +14,10 @@ var util = require('util');
 var os = require('os');
 
 //
-var fabric_client = new Fabric_Client();
+function queryMarksheetByEnrolNo(enrolno){
 
+var fabric_client = new Fabric_Client();
+var id = "{\"selector\":{\"EnrolNo\":enrolno}, \"use_index\":[\"_design/indexMarksheetDoc\", \"indexMarksheetId\"]}";
 // setup the fabric network
 var channel = fabric_client.newChannel('testchannel');
 var peer = fabric_client.newPeer('grpc://localhost:7051');
@@ -55,7 +57,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 		//targets : --- letting this default to the peers assigned to the channel
 		chaincodeId: 'mark',
 		fcn: 'queryMarksheetByEnrolNo',
-		args: ["{\"selector\":{\"EnrolNo\":\"1\"}, \"use_index\":[\"_design/indexMarksheetDoc\", \"indexMarksheetId\"]}"]
+		args: [id]
 	};
 
 	// send the query proposal to the peer
@@ -75,3 +77,6 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 }).catch((err) => {
 	console.error('Failed to query successfully :: ' + err);
 });
+}
+
+exports.test = queryMarksheetByEnrolNo;

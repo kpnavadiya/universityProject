@@ -14,6 +14,7 @@ var util = require('util');
 var os = require('os');
 
 //
+function queryMarksheet(id){
 var fabric_client = new Fabric_Client();
 
 // setup the fabric network
@@ -55,7 +56,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 		//targets : --- letting this default to the peers assigned to the channel
 		chaincodeId: 'marksheet',
 		fcn: 'queryMarksheet',
-		args: ['1']
+		args: [id]
 	};
 
 	// send the query proposal to the peer
@@ -67,6 +68,8 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 		if (query_responses[0] instanceof Error) {
 			console.error("error from query = ", query_responses[0]);
 		} else {
+			//return query_responses[0].toString();
+			//callback(null,query_responses[0].toString());
 			console.log("Response is ", query_responses[0].toString());
 		}
 	} else {
@@ -75,3 +78,6 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 }).catch((err) => {
 	console.error('Failed to query successfully :: ' + err);
 });
+
+}
+exports.test = queryMarksheet;

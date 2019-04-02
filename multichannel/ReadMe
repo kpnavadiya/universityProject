@@ -6,7 +6,7 @@ step 2 : than go to 'sdk' directory
 	==> Run npm install
 	==> registerAdmin.js , registerUser1.js, registerUser2.js
 step 3 : Query on network 
-	==> go to the 'Testsdk' directory 
+	==> go to the 'Test1' directory 
 	==> In this directory file which contain the different query and invoke transction feature.
 
 # follwoing are details for the file

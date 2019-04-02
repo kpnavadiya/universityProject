@@ -14,9 +14,12 @@ var util = require('util');
 var os = require('os');
 
 //
- function createMarksheet(key,name,enrolno,exam,samester,cgpa) {
+ function createMarksheet(key,name,enrolno,exam,samester,cgpa,username,chaincode,fun_name,channelId) {
 var fabric_client = new Fabric_Client();
 
+	console.log(username);
+	console.log(chaincode);
+	console.log(fun_name);
 	// Get all parameter
 	// var key = key
 	// var name = name
@@ -25,7 +28,7 @@ var fabric_client = new Fabric_Client();
 	// var samester = samester
 	// var cgpa = cgpa
 // setup the fabric network
-var channel = fabric_client.newChannel('mychannel');
+var channel = fabric_client.newChannel(channelId);
 var peer = fabric_client.newPeer('grpc://localhost:7051');
 channel.addPeer(peer);
 var order = fabric_client.newOrderer('grpc://localhost:7050')
@@ -50,13 +53,13 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 	fabric_client.setCryptoSuite(crypto_suite);
 
 	// get the enrolled user from persistence, this user will sign all requests
-	return fabric_client.getUserContext('user1', true);
+	return fabric_client.getUserContext(username, true);
 }).then((user_from_store) => {
 	if (user_from_store && user_from_store.isEnrolled()) {
-		console.log('Successfully loaded user1 from persistence');
+		console.log('Successfully loaded' + username + 'from persistence');
 		member_user = user_from_store;
 	} else {
-		throw new Error('Failed to get user1.... run registerUser.js');
+		throw new Error('Failed to get' + username +'.... run registerUser.js');
 	}
 
 	// get a transaction id object based on the current user assigned to fabric client
@@ -69,10 +72,10 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 	// ex: args: ['MarksheetId', 'EnrolNo', 'Name', 'Samester', 'ExamType','Cgpa']
 	var request = {
 		//targets: let default to the peer assigned to the client
-		chaincodeId: 'marksheet',
-		fcn: 'createMarksheet',
-		args: [key, name, enrolno, samester, exam, cgpa],
-		chainId: 'mychannel',
+		chaincodeId: chaincode,
+		fcn: fun_name,
+		args: [ key, enrolno, name, samester,exam,cgpa],
+		chainId: channelId,
 		txId: tx_id
 	};
 
@@ -171,4 +174,4 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 });
 }
 
-exports.test = createMarksheet ;
+exports.test = createMarksheet;
